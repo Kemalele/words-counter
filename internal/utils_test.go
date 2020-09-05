@@ -13,7 +13,7 @@ func TestSplitBytes(t *testing.T) {
 	}{
 		{[]byte("hello world"),' ',[][]byte{[]byte("hello"),[]byte("world")}},
 		{[]byte("Wind ye down there, ye\nprouder, sadder souls!\n"),' ',[][]byte{[]byte("wind"),[]byte("ye"),[]byte("down"),[]byte("there"),[]byte("ye"),[]byte("prouder"),[]byte("sadder"),[]byte("souls")}},
-		{[]byte("Hello Kitty"),' ',[][]byte{[]byte("hello"), []byte("kitty")}},
+		{[]byte("Hello--Kitty"),' ',[][]byte{[]byte("hello"), []byte("kitty")}},
 	}
 
 

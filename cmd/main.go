@@ -11,7 +11,7 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	words := internal.SplitBytes(f,' ')
+	words := internal.SplitBytes(f)
 	err = internal.PrintWords(words)
 	if err != nil {
 		log.Panic(err)

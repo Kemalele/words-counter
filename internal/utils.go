@@ -30,24 +30,24 @@ func PrintWords(words [][]byte) error{
 	return nil
 }
 
-func SplitBytes(data []byte, splitter byte) [][]byte {
-	var splitted [][]byte
+func SplitBytes(data []byte) [][]byte {
+	var splited [][]byte
 	var word []byte
 
 	for _, ch := range data {
-		if (ch == splitter || ch == '\n') && len(word) != 0 {
-			splitted = append(splitted,bytes.ToLower(word))
+		if !isAlphabetic(ch) && len(word) != 0 {
+			splited = append(splited,bytes.ToLower(word))
 			word = []byte{}
-		} else if isAlphabetic(ch) {
+		}else if isAlphabetic(ch) {
 			word = append(word,ch)
 		}
 	}
 
 	if len(word) != 0 {
-		splitted = append(splitted,word)
+		splited = append(splited,bytes.ToLower(word))
 	}
 
-	return splitted
+	return splited
 }
 
 func isByteMatrixesEqual(a [][]byte, b [][]byte) bool {

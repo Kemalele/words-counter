@@ -11,8 +11,9 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	words := internal.SplitBytes(f)
-	err = internal.PrintWords(words)
+
+	err = internal.Solve(f)
+
 	if err != nil {
 		log.Panic(err)
 	}

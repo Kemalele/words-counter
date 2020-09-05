@@ -1,55 +1,5 @@
 package internal
 
-import (
-	"bufio"
-	"bytes"
-	"os"
-)
-
-func PrintBytes(data []byte) error {
-	writer := bufio.NewWriter(os.Stdout)
-	_, err := writer.Write(data)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func PrintWords(words [][]byte) error{
-	size := lenWords(words) - 1
-	writer := bufio.NewWriterSize(os.Stdout,size)
-	for _, word := range words {
-		word = append(word,'[')
-		_, err := writer.Write(word)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func SplitBytes(data []byte) [][]byte {
-	var splited [][]byte
-	var word []byte
-
-	for _, ch := range data {
-		if !isAlphabetic(ch) && len(word) != 0 {
-			splited = append(splited,bytes.ToLower(word))
-			word = []byte{}
-		}else if isAlphabetic(ch) {
-			word = append(word,ch)
-		}
-	}
-
-	if len(word) != 0 {
-		splited = append(splited,bytes.ToLower(word))
-	}
-
-	return splited
-}
-
 func isByteMatrixesEqual(a [][]byte, b [][]byte) bool {
 	if len(a) != len(b) {
 		return false

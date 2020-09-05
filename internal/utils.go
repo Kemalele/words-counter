@@ -38,7 +38,7 @@ func SplitBytes(data []byte, splitter byte) [][]byte {
 		if (ch == splitter || ch == '\n') && len(word) != 0 {
 			splitted = append(splitted,bytes.ToLower(word))
 			word = []byte{}
-		} else if isAlphanumeric(ch){
+		} else if isAlphabetic(ch) {
 			word = append(word,ch)
 		}
 	}
@@ -70,13 +70,14 @@ func isByteMatrixesEqual(a [][]byte, b [][]byte) bool {
 	return true
 }
 
-func isAlphanumeric(ch byte) bool{
+func isAlphabetic(ch byte) bool{
 	if (ch > 64 && ch < 91) || (ch > 96 && ch < 123) {
 		return true
 	}
 
 	return false
 }
+
 
 func lenWords(words[][]byte) int {
 	var lenW int

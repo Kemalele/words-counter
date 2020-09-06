@@ -1,15 +1,8 @@
 package internal
 
 import (
-	"bufio"
 	"bytes"
-	"os"
-	"strconv"
-
-	//"strconv"
-)
-const recentLimit = 20
-
+	)
 type word struct {
 	Data []byte
 	Count int
@@ -18,15 +11,22 @@ type word struct {
 type Words struct {
 	Body 		     []word
 	mostRecents      []word
+	recentLimit 	 int
 }
+func InitWords(recentLimit int) Words {
+	var words Words
+	words.recentLimit = recentLimit
+	words.mostRecents = make([]word,recentLimit)
 
+	return words
+}
 func (words *Words) Append(w word) {
 	// initializing mostRecents array
-	var i int
-	if len(words.mostRecents) < recentLimit {
-		words.mostRecents = make([]word,recentLimit)
+	if len(words.mostRecents) != words.recentLimit {
+		words.mostRecents = make([]word,words.recentLimit)
 	}
-	if i = words.exists(w); i != -1 {
+
+	if i := words.exists(w); i != -1 {
 		words.Body[i].Count += 1
 		words.mostRecent(words.Body[i])
 	} else {
@@ -43,7 +43,7 @@ func (words *Words) exists(w word) int {
 	}
 
 	// front, back search
-	for i, j := 0, len(words.Body) -1; i < j; i,j = i+1, j-1 {
+	for i, j := 0, len(words.Body) -1; i < j; i, j = i+1, j-1 {
 		if bytes.Equal(words.Body[i].Data, w.Data) {
 			return i
 		} else if bytes.Equal(words.Body[j].Data, w.Data) {
@@ -55,68 +55,41 @@ func (words *Words) exists(w word) int {
 }
 
 func (words *Words) mostRecent(w word) {
+	// if input more recent - replace
 	for i, word := range words.mostRecents {
 		if w.Count > word.Count {
-			words.mostRecents[i] = w
+			words.popRepeatingRecent(w,i)
+			words.addRecent(w,i)
+			return
+			// if word not more recent then before - stop
+		} else if bytes.Equal(words.mostRecents[i].Data, w.Data) {
 			return
 		}
 	}
 }
 
-func Solve(file []byte) error{
-	words := split(file)
-	err := printWords(words.mostRecents)
-	if err != nil {
-		return err
-	}
+func (words *Words) addRecent(w word, wIndex int) {
+	var temp []word
+	temp = append(temp, words.mostRecents[:wIndex]...)
+	temp = append(temp,w)
 
-	return nil
+	lastElements := words.mostRecents[wIndex : len(words.mostRecents)]
+	temp = append(temp, lastElements...)
+
+	words.mostRecents = temp[:words.recentLimit]
 }
 
+func (words *Words) popRepeatingRecent(w word, wIndex int) {
+	var temp []word
 
-func split(data []byte) Words {
-	var words Words
-	var text []byte
-
-	for _, ch := range data {
-		if !isAlphabetic(ch) && len(text) != 0 {
-			w := word{Data:bytes.ToLower(text)}
-			words.Append(w)
-			text = []byte{}
-		} else if isAlphabetic(ch) {
-			text = append(text,ch)
+	for i := wIndex; i < len(words.mostRecents);i++ {
+		if bytes.Equal(w.Data, words.mostRecents[i].Data) {
+			temp = append(temp,words.mostRecents[:i]...)
+			if i + 1 < len(words.mostRecents) {
+				lastElements := words.mostRecents[i+1:]
+				temp = append(temp, lastElements...)
+			}
+			words.mostRecents = temp
 		}
 	}
-
-	if len(text) != 0 {
-		w := word{Data:bytes.ToLower(text)}
-		words.Append(w)
-	}
-
-	return words
 }
-
-func printWords(words []word) error{
-	var length int
-	for _,word := range words {
-		length += word.Count
-	}
-
-	writer := bufio.NewWriterSize(os.Stdout,1)
-	for _, word := range words {
-		var output []byte
-		word.Data = append(word.Data,'\n')
-		output = bytes.Join([][]byte{[]byte(strconv.Itoa(word.Count)),word.Data},[]byte(" "))
-		_, err := writer.Write(output)
-
-		//word.Data = append(word.Data,'\n')
-		//_, err := writer.Write(word.Data)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// integer to bytes

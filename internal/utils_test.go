@@ -1,27 +1,26 @@
 package internal
 
 import (
+	"bytes"
+	"fmt"
+	"strconv"
 	"testing"
 )
 
-
-
-func TestIsBytesMatrixEqueal(t *testing.T) {
+func TestItob(t *testing.T) {
 	testCases := []struct{
-		a [][]byte
-		b [][]byte
-		result bool
+		input int
+		res []byte
 	}{
-		{[][]byte{{'a','b','c'},{'z','x','c'}},[][]byte{{'a','b','c'},{'z','x','c'}},true},
-		{[][]byte{{'o','b','c'},{'z','x','c'}},[][]byte{{'a','b','c'},{'z','x','c'}},false},
-		{[][]byte{{'a','b','c'},{'z','x','c'}},[][]byte{{'a','b','c'},{'z','o','c'}},false},
+		{1,[]byte(strconv.Itoa(1))},
+		{10,[]byte(strconv.Itoa(10))},
 	}
 
 	for _, test := range testCases {
-		if res := isByteMatrixesEqual(test.a,test.b); res != test.result {
-			t.Fatal("expected", test.result, "got", res)
-		}else {
-			t.Log("ok:   ",test.result, "==", res)
+		if res := itob(test.input); !bytes.Equal(res, test.res) {
+			t.Fatal(fmt.Sprintf("expected %v, got %v", test.res,res))
+		} else {
+			t.Log(fmt.Sprintf("ok: %v == %v",test.res,res))
 		}
 	}
 }

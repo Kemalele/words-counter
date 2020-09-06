@@ -1,23 +1,18 @@
 package internal
 
-func isByteMatrixesEqual(a [][]byte, b [][]byte) bool {
-	if len(a) != len(b) {
-		return false
+import "bytes"
+
+func itob(num int) []byte {
+	var result []byte
+	const asciiIntegerStartingIndex = 48
+	for num != 0 {
+		b := byte(num % 10 + asciiIntegerStartingIndex)
+		result = append([]byte{b}, result...)
+		num /= 10
 	}
 
-	for i := 0; i < len(a); i++ {
-		if len(a[i]) != len(b[i]) {
-			return false
-		}
 
-		for j := 0; j < len(a[i]); j++ {
-			if a[i][j] != b[i][j] {
-				return false
-			}
-		}
-	}
-
-	return true
+	return result
 }
 
 func isAlphabetic(ch byte) bool{
@@ -28,13 +23,16 @@ func isAlphabetic(ch byte) bool{
 	return false
 }
 
-
-func lenWords(words[][]byte) int {
-	var lenW int
-
-	for _, word := range words {
-		lenW += len(word) + 1
+func wordsSame(a, b []word) bool {
+	if len(a) != len(b) {
+		return false
 	}
 
-	return lenW
+	for i := 0; i < len(a); i++ {
+		if !bytes.Equal(a[i].Data,b[i].Data) || a[i].Count != b[i].Count {
+			return false
+		}
+	}
+
+	return true
 }

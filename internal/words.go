@@ -4,6 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"os"
+	"strconv"
+
+	//"strconv"
 )
 const recentLimit = 20
 
@@ -19,17 +22,19 @@ type Words struct {
 
 func (words *Words) Append(w word) {
 	// initializing mostRecents array
+	var i int
 	if len(words.mostRecents) < recentLimit {
 		words.mostRecents = make([]word,recentLimit)
 	}
-
-	if i := words.exists(w); i != -1 {
+	if i = words.exists(w); i != -1 {
 		words.Body[i].Count += 1
+		words.mostRecent(words.Body[i])
 	} else {
+		w.Count += 1
 		words.Body = append(words.Body, w)
+		words.mostRecent(words.Body[len(words.Body) -1 ])
 	}
 
-	words.mostRecent(w)
 }
 
 func (words *Words) exists(w word) int {
@@ -49,19 +54,18 @@ func (words *Words) exists(w word) int {
 	return -1
 }
 
-func (words *Words) mostRecent(w word) bool {
+func (words *Words) mostRecent(w word) {
 	for i, word := range words.mostRecents {
 		if w.Count > word.Count {
 			words.mostRecents[i] = w
-			return true
+			return
 		}
 	}
-	return false
 }
 
 func Solve(file []byte) error{
 	words := split(file)
-	err := printWords(words)
+	err := printWords(words.mostRecents)
 	if err != nil {
 		return err
 	}
@@ -92,12 +96,21 @@ func split(data []byte) Words {
 	return words
 }
 
-func printWords(words Words) error{
-	size := len(words.Body) - 1
-	writer := bufio.NewWriterSize(os.Stdout,size)
-	for _, word := range words.Body {
-		word.Data = append(word.Data,'[')
-		_, err := writer.Write(word.Data)
+func printWords(words []word) error{
+	var length int
+	for _,word := range words {
+		length += word.Count
+	}
+
+	writer := bufio.NewWriterSize(os.Stdout,1)
+	for _, word := range words {
+		var output []byte
+		word.Data = append(word.Data,'\n')
+		output = bytes.Join([][]byte{[]byte(strconv.Itoa(word.Count)),word.Data},[]byte(" "))
+		_, err := writer.Write(output)
+
+		//word.Data = append(word.Data,'\n')
+		//_, err := writer.Write(word.Data)
 		if err != nil {
 			return err
 		}
@@ -106,4 +119,4 @@ func printWords(words Words) error{
 	return nil
 }
 
-
+// integer to bytes

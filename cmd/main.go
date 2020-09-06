@@ -1,5 +1,6 @@
 package main
 import (
+	"fmt"
 	//"fmt"
 	//"io"
 	"io/ioutil"
@@ -13,9 +14,8 @@ func main() {
 	}
 
 	err = internal.Solve(f)
-
 	if err != nil {
-		log.Panic(err)
+		fmt.Println(err)
 	}
 
 }

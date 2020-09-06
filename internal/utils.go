@@ -1,73 +1,18 @@
 package internal
 
-import (
-	"bufio"
-	"bytes"
-	"os"
-)
+import "bytes"
 
-func PrintBytes(data []byte) error {
-	writer := bufio.NewWriter(os.Stdout)
-	_, err := writer.Write(data)
-	if err != nil {
-		return err
+func itob(num int) []byte {
+	var result []byte
+	const asciiIntegerStartingIndex = 48
+	for num != 0 {
+		b := byte(num % 10 + asciiIntegerStartingIndex)
+		result = append([]byte{b}, result...)
+		num /= 10
 	}
 
-	return nil
-}
 
-func PrintWords(words [][]byte) error{
-	size := lenWords(words) - 1
-	writer := bufio.NewWriterSize(os.Stdout,size)
-	for _, word := range words {
-		word = append(word,'[')
-		_, err := writer.Write(word)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func SplitBytes(data []byte, splitter byte) [][]byte {
-	var splitted [][]byte
-	var word []byte
-
-	for _, ch := range data {
-		if (ch == splitter || ch == '\n') && len(word) != 0 {
-			splitted = append(splitted,bytes.ToLower(word))
-			word = []byte{}
-		} else if isAlphabetic(ch) {
-			word = append(word,ch)
-		}
-	}
-
-	if len(word) != 0 {
-		splitted = append(splitted,word)
-	}
-
-	return splitted
-}
-
-func isByteMatrixesEqual(a [][]byte, b [][]byte) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	for i := 0; i < len(a); i++ {
-		if len(a[i]) != len(b[i]) {
-			return false
-		}
-
-		for j := 0; j < len(a[i]); j++ {
-			if a[i][j] != b[i][j] {
-				return false
-			}
-		}
-	}
-
-	return true
+	return result
 }
 
 func isAlphabetic(ch byte) bool{
@@ -78,13 +23,16 @@ func isAlphabetic(ch byte) bool{
 	return false
 }
 
-
-func lenWords(words[][]byte) int {
-	var lenW int
-
-	for _, word := range words {
-		lenW += len(word) + 1
+func wordsSame(a, b []word) bool {
+	if len(a) != len(b) {
+		return false
 	}
 
-	return lenW
+	for i := 0; i < len(a); i++ {
+		if !bytes.Equal(a[i].Data,b[i].Data) || a[i].Count != b[i].Count {
+			return false
+		}
+	}
+
+	return true
 }

@@ -1,18 +1,17 @@
 package main
+
 import (
-	//"fmt"
-	//"io"
+	internal "../internal"
 	"io/ioutil"
 	"log"
-	internal "../internal"
 )
 func main() {
 	f, err :=  ioutil.ReadFile("../static/mobydick.txt")
 	if err != nil {
 		log.Panic(err)
 	}
-	words := internal.SplitBytes(f,' ')
-	err = internal.PrintWords(words)
+
+	err = internal.Solve(f)
 	if err != nil {
 		log.Panic(err)
 	}

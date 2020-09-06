@@ -24,3 +24,20 @@ func TestItob(t *testing.T) {
 		}
 	}
 }
+
+func TestBytesToLower(t *testing.T) {
+	testCases := []struct{
+		input []byte
+		res   []byte
+	}{
+		{[]byte("HelLo0-"),[]byte("hello0-")},
+	}
+
+	for _, test := range testCases {
+		if res := bytesToLower(test.input); !bytes.Equal(res, test.res) {
+			t.Fatal(fmt.Sprintf("expected %v, got %v", test.res,res))
+		} else {
+			t.Log(fmt.Sprintf("ok: %v == %v",test.res,res))
+		}
+	}
+}

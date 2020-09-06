@@ -2,7 +2,6 @@ package internal
 
 import (
 	"bufio"
-	"bytes"
 	"os"
 )
 
@@ -23,7 +22,7 @@ func split(data []byte) Words {
 
 	for _, ch := range data {
 		if !isAlphabetic(ch) && len(text) != 0 {
-			w := word{Data:bytes.ToLower(text)}
+			w := word{Data:bytesToLower(text)}
 			words.Append(w)
 			text = []byte{}
 		} else if isAlphabetic(ch) {
@@ -32,7 +31,7 @@ func split(data []byte) Words {
 	}
 
 	if len(text) != 0 {
-		w := word{Data:bytes.ToLower(text)}
+		w := word{Data:bytesToLower(text)}
 		words.Append(w)
 	}
 
@@ -49,7 +48,7 @@ func printWords(words []word) error{
 	for _, word := range words {
 		var output []byte
 		word.Data = append(word.Data,'\n')
-		output = bytes.Join([][]byte{itob(word.Count),word.Data},[]byte(" "))
+		output = bytesJoin([][]byte{itob(word.Count),word.Data},[]byte(" "))
 		_, err := writer.Write(output)
 		if err != nil {
 			return err

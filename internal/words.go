@@ -1,8 +1,5 @@
 package internal
 
-import (
-	"bytes"
-	)
 type word struct {
 	Data []byte
 	Count int
@@ -38,15 +35,15 @@ func (words *Words) Append(w word) {
 }
 
 func (words *Words) exists(w word) int {
-	if len(words.Body) == 1 && bytes.Equal(words.Body[0].Data,w.Data){
+	if len(words.Body) == 1 && bytesEqual(words.Body[0].Data,w.Data){
 		return 0
 	}
 
 	// front, back search
 	for i, j := 0, len(words.Body) -1; i < j; i, j = i+1, j-1 {
-		if bytes.Equal(words.Body[i].Data, w.Data) {
+		if bytesEqual(words.Body[i].Data, w.Data) {
 			return i
-		} else if bytes.Equal(words.Body[j].Data, w.Data) {
+		} else if bytesEqual(words.Body[j].Data, w.Data) {
 			return j
 		}
 	}
@@ -80,7 +77,7 @@ func (words *Words) popRepeatingRecent(w word, wIndex int) {
 	var temp []word
 
 	for i := wIndex; i < len(words.mostRecents);i++ {
-		if bytes.Equal(w.Data, words.mostRecents[i].Data) {
+		if bytesEqual(w.Data, words.mostRecents[i].Data) {
 			temp = append(temp,words.mostRecents[:i]...)
 			if i + 1 < len(words.mostRecents) {
 				lastElements := words.mostRecents[i+1:]

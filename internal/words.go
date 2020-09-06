@@ -61,9 +61,6 @@ func (words *Words) mostRecent(w word) {
 			words.popRepeatingRecent(w,i)
 			words.addRecent(w,i)
 			return
-			// if word not more recent then before - stop
-		} else if bytes.Equal(words.mostRecents[i].Data, w.Data) {
-			return
 		}
 	}
 }

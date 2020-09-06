@@ -51,9 +51,6 @@ func printWords(words []word) error{
 		word.Data = append(word.Data,'\n')
 		output = bytes.Join([][]byte{itob(word.Count),word.Data},[]byte(" "))
 		_, err := writer.Write(output)
-
-		//word.Data = append(word.Data,'\n')
-		//_, err := writer.Write(word.Data)
 		if err != nil {
 			return err
 		}

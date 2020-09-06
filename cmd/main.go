@@ -1,11 +1,9 @@
 package main
+
 import (
-	"fmt"
-	//"fmt"
-	//"io"
+	internal "../internal"
 	"io/ioutil"
 	"log"
-	internal "../internal"
 )
 func main() {
 	f, err :=  ioutil.ReadFile("../static/mobydick.txt")
@@ -15,7 +13,7 @@ func main() {
 
 	err = internal.Solve(f)
 	if err != nil {
-		fmt.Println(err)
+		log.Panic(err)
 	}
 
 }
